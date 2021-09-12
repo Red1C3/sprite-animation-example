@@ -1,3 +1,26 @@
+/*
+MIT License
+
+Copyright (c) 2021 Mohammad Issawi
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 #include <Sprite.h>
 using namespace std;
 using namespace sf;
@@ -12,6 +35,7 @@ void Sprite::init(vector<string> texPaths,int fps)
     textures.resize(texPaths.size());
     currentTexInd = 0;
     spf = 1.0f / (float)fps;
+    glClearColor(0, 0, 0, 1);
     for (unsigned i = 0; i < texPaths.size(); ++i)
     {
         Image image;
@@ -20,6 +44,7 @@ void Sprite::init(vector<string> texPaths,int fps)
         {
             throw exception();
         }
+        //Sends textures to GPU
         glGenTextures(1, &textures[i]);
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -28,6 +53,7 @@ void Sprite::init(vector<string> texPaths,int fps)
                      0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
         assert(glGetError() == 0);
     }
+    //Main Rendering Quad Data
     float vertices[8] = {-1, -1,
                          -1, 1,
                          1, -1,
@@ -49,11 +75,13 @@ void Sprite::init(vector<string> texPaths,int fps)
 }
 void Sprite::draw(){
     if(timer.getElapsedTime().asSeconds()>=spf){
+        //Switches textures
         timer.restart();
         currentTexInd++;
         currentTexInd = currentTexInd % textures.size();
         glBindTexture(GL_TEXTURE_2D, textures[currentTexInd]);
     }
+    //Draws The Quad
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 void Sprite::terminate()
