@@ -9,6 +9,12 @@ using namespace std;
 using namespace sf;
 int main(int argc, char **argv)
 {
+    if (argc == 1)
+    {
+        cout << "Please provide a FPS and the sprites" << endl;
+        return -1;
+    }
+    int fps = atoi(argv[1]);
     ContextSettings ctxSettings;
     ctxSettings.antialiasingLevel = 0;
     ctxSettings.depthBits = 0;
@@ -23,12 +29,12 @@ int main(int argc, char **argv)
         return -1;
     }
     vector<string> args;
-    for (int i = 1; i < argc; ++i)
+    for (int i = 2; i < argc; ++i)
     {
         args.push_back(argv[i]);
     }
-    Sprite::instance().init(args);
-    Shader shader("./Assets/vertexShader.glsl", "./Assets/fragmentShader.glsl");
+    Sprite::instance().init(args,fps);
+    Shader shader("./Shader/vertexShader.glsl", "./Shader/fragmentShader.glsl");
     glUseProgram(shader.id);
     assert(glGetError() == 0);
     while (1)
@@ -44,7 +50,7 @@ int main(int argc, char **argv)
                 return 0;
                 break;
             case Event::Resized:
-                //TODO
+                glViewport(0, 0, event.size.width, event.size.height);
                 break;
             default:
                 break;

@@ -32,3 +32,6 @@ Shader::Shader(const char *vertexShaderPath, const char *fragmentShaderPath)
     glDeleteShader(fragmentShader);
     assert("Failed to compile shader" && glGetError() == 0);
 }
+Shader::~Shader(){
+    glDeleteProgram(id);
+}
