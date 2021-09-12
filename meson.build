@@ -1,0 +1,5 @@
+project('sae','cpp')
+srcAssembler=run_command('srcAssembler.sh')
+sources=srcAssembler.stdout().strip().split('\n')
+inc_dir=include_directories('include')
+executable('sae',sources,include_directories:[inc_dir],dependencies:[])
