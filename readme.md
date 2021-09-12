@@ -13,6 +13,7 @@ PNG,BMP,TGA and JPG, other formats may work too, only PNG was tested (The mentio
 ## Build
 The recommended way is to use Meson.
 However, you can build without it, with the required dependencies included and linked ofc.
+Note that after building the binary is expecting "Shader" folder to be in the same directory as the executable.
 ### Dependencies
 - [SFML](https://www.sfml-dev.org) (Link against at least Windows, System and Graphics modules)
 - [GLEW](http://glew.sourceforge.net/)
