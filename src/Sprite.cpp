@@ -26,9 +26,34 @@ void Sprite::init(vector<string> texPaths)
                      0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
         assert(glGetError() == 0);
     }
+    float vertices[8] = {-1, -1,
+                         -1, 1,
+                         1, -1,
+                         1, 1};
+    unsigned indices[6] = {2, 0, 1,
+                           2, 1, 3};
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * 6, indices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    assert(glGetError() == 0);
 }
-void Sprite::terminate(){
-    for (unsigned i = 0; i < textures.size();++i){
+void Sprite::draw(){
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+}
+void Sprite::terminate()
+{
+    for (unsigned i = 0; i < textures.size(); ++i)
+    {
         glDeleteTextures(1, &textures[i]);
     }
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+    glDeleteVertexArrays(1, &VAO);
 }
